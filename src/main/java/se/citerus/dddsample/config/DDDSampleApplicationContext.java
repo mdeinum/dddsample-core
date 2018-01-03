@@ -1,12 +1,14 @@
 package se.citerus.dddsample.config;
 
-import com.pathfinder.api.GraphTraversalService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import com.pathfinder.api.GraphTraversalService;
+
 import se.citerus.dddsample.application.ApplicationEvents;
 import se.citerus.dddsample.application.BookingService;
 import se.citerus.dddsample.application.CargoInspectionService;
@@ -82,11 +84,7 @@ public class DDDSampleApplicationContext {
 
     @Bean
     public RoutingService routingService() {
-        ExternalRoutingService routingService = new ExternalRoutingService();
-        routingService.setGraphTraversalService(graphTraversalService);
-        routingService.setLocationRepository(locationRepository);
-        routingService.setVoyageRepository(voyageRepository);
-        return routingService;
+        return new ExternalRoutingService(graphTraversalService, locationRepository, voyageRepository);
     }
 
     @Bean

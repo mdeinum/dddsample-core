@@ -1,10 +1,16 @@
 package se.citerus.dddsample.infrastructure.routing;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.pathfinder.api.GraphTraversalService;
 import com.pathfinder.api.TransitEdge;
 import com.pathfinder.api.TransitPath;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import se.citerus.dddsample.domain.model.cargo.Itinerary;
 import se.citerus.dddsample.domain.model.cargo.Leg;
 import se.citerus.dddsample.domain.model.cargo.RouteSpecification;
@@ -15,10 +21,6 @@ import se.citerus.dddsample.domain.model.voyage.VoyageNumber;
 import se.citerus.dddsample.domain.model.voyage.VoyageRepository;
 import se.citerus.dddsample.domain.service.RoutingService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 /**
  * Our end of the routing service. This is basically a data model
  * translation layer between our domain model and the API put forward
@@ -27,10 +29,16 @@ import java.util.Properties;
  */
 public class ExternalRoutingService implements RoutingService {
 
-  private GraphTraversalService graphTraversalService;
-  private LocationRepository locationRepository;
-  private VoyageRepository voyageRepository;
+  private final GraphTraversalService graphTraversalService;
+  private final LocationRepository locationRepository;
+  private final VoyageRepository voyageRepository;
   private static final Log log = LogFactory.getLog(ExternalRoutingService.class);
+
+  public ExternalRoutingService(GraphTraversalService graphTraversalService, LocationRepository locationRepository, VoyageRepository voyageRepository) {
+    this.graphTraversalService = graphTraversalService;
+    this.locationRepository = locationRepository;
+    this.voyageRepository = voyageRepository;
+  }
 
   public List<Itinerary> fetchRoutesForSpecification(RouteSpecification routeSpecification) {
     /*
@@ -83,17 +91,4 @@ public class ExternalRoutingService implements RoutingService {
       edge.getFromDate(), edge.getToDate()
     );
   }
-
-  public void setGraphTraversalService(GraphTraversalService graphTraversalService) {
-    this.graphTraversalService = graphTraversalService;
-  }
-
-  public void setLocationRepository(LocationRepository locationRepository) {
-    this.locationRepository = locationRepository;
-  }
-
-  public void setVoyageRepository(VoyageRepository voyageRepository) {
-    this.voyageRepository = voyageRepository;
-  }
-  
 }
