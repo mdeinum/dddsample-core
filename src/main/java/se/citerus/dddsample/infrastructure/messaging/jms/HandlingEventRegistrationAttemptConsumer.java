@@ -1,13 +1,14 @@
 package se.citerus.dddsample.infrastructure.messaging.jms;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import se.citerus.dddsample.application.HandlingEventService;
-import se.citerus.dddsample.interfaces.handling.HandlingEventRegistrationAttempt;
-
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import se.citerus.dddsample.application.HandlingEventService;
+import se.citerus.dddsample.interfaces.handling.HandlingEventRegistrationAttempt;
 
 /**
  * Consumes handling event registration attempt messages and delegates to
@@ -16,8 +17,12 @@ import javax.jms.ObjectMessage;
  */
 public class HandlingEventRegistrationAttemptConsumer implements MessageListener {
 
-  private HandlingEventService handlingEventService;
-  private static final Log logger = LogFactory.getLog(HandlingEventRegistrationAttemptConsumer.class);
+  private final HandlingEventService handlingEventService;
+  private final Logger logger = LoggerFactory.getLogger(HandlingEventRegistrationAttemptConsumer.class);
+
+  public HandlingEventRegistrationAttemptConsumer(HandlingEventService handlingEventService) {
+    this.handlingEventService = handlingEventService;
+  }
 
   @Override
   public void onMessage(final Message message) {
@@ -32,12 +37,7 @@ public class HandlingEventRegistrationAttemptConsumer implements MessageListener
         attempt.getType()
       );
     } catch (Exception e) {
-      logger.error(e, e);
+      logger.error(e.getMessage(), e);
     }
   }
-
-  public void setHandlingEventService(HandlingEventService handlingEventService) {
-    this.handlingEventService = handlingEventService;
-  }
-
 }

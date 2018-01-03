@@ -41,11 +41,11 @@
   </bean>
 
   <bean id="cargoHandledConsumer" class="se.citerus.dddsample.infrastructure.messaging.jms.CargoHandledConsumer">
-    <property name="cargoInspectionService" ref="cargoInspectionService"/>
+    <constructor-arg ref="cargoInspectionService"/>
   </bean>
 
   <bean id="handlingEventRegistrationAttemptConsumer" class="se.citerus.dddsample.infrastructure.messaging.jms.HandlingEventRegistrationAttemptConsumer">
-    <property name="handlingEventService" ref="handlingEventService"/>
+    <constructor-arg ref="handlingEventService"/>
   </bean>
 
   <bean id="simpleLoggingConsumer" class="se.citerus.dddsample.infrastructure.messaging.jms.SimpleLoggingConsumer"/>

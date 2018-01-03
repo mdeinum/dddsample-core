@@ -1,25 +1,30 @@
 package se.citerus.dddsample.application.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
 import se.citerus.dddsample.application.BookingService;
-import se.citerus.dddsample.domain.model.cargo.*;
+import se.citerus.dddsample.domain.model.cargo.Cargo;
+import se.citerus.dddsample.domain.model.cargo.CargoRepository;
+import se.citerus.dddsample.domain.model.cargo.Itinerary;
+import se.citerus.dddsample.domain.model.cargo.RouteSpecification;
+import se.citerus.dddsample.domain.model.cargo.TrackingId;
 import se.citerus.dddsample.domain.model.location.Location;
 import se.citerus.dddsample.domain.model.location.LocationRepository;
 import se.citerus.dddsample.domain.model.location.UnLocode;
 import se.citerus.dddsample.domain.service.RoutingService;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 public class BookingServiceImpl implements BookingService {
 
   private final CargoRepository cargoRepository;
   private final LocationRepository locationRepository;
   private final RoutingService routingService;
-  private final Log logger = LogFactory.getLog(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   public BookingServiceImpl(final CargoRepository cargoRepository,
                             final LocationRepository locationRepository,
@@ -43,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
     final Cargo cargo = new Cargo(trackingId, routeSpecification);
 
     cargoRepository.store(cargo);
-    logger.info("Booked new cargo with tracking id " + cargo.trackingId().idString());
+    logger.info("Booked new cargo with tracking id {}", cargo.trackingId().idString());
 
     return cargo.trackingId();
   }
@@ -71,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
     cargo.assignToRoute(itinerary);
     cargoRepository.store(cargo);
 
-    logger.info("Assigned cargo " + trackingId + " to new route");
+    logger.info("Assigned cargo {} to new route", trackingId);
   }
 
   @Override
@@ -86,7 +91,7 @@ public class BookingServiceImpl implements BookingService {
     cargo.specifyNewRoute(routeSpecification);
 
     cargoRepository.store(cargo);
-    logger.info("Changed destination for cargo " + trackingId + " to " + routeSpecification.destination());
+    logger.info("Changed destination for cargo {} to {}" ,trackingId, routeSpecification.destination());
   }
 
 }

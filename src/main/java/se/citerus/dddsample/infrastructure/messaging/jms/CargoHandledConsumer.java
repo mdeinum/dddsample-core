@@ -1,13 +1,14 @@
 package se.citerus.dddsample.infrastructure.messaging.jms;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import se.citerus.dddsample.application.CargoInspectionService;
-import se.citerus.dddsample.domain.model.cargo.TrackingId;
-
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import se.citerus.dddsample.application.CargoInspectionService;
+import se.citerus.dddsample.domain.model.cargo.TrackingId;
 
 /**
  * Consumes JMS messages and delegates notification of misdirected
@@ -18,8 +19,12 @@ import javax.jms.TextMessage;
  */
 public class CargoHandledConsumer implements MessageListener {
 
-  private CargoInspectionService cargoInspectionService;
-  private final Log logger = LogFactory.getLog(getClass());
+  private final CargoInspectionService cargoInspectionService;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
+  public CargoHandledConsumer(CargoInspectionService cargoInspectionService) {
+    this.cargoInspectionService = cargoInspectionService;
+  }
 
   @Override  
   public void onMessage(final Message message) {
@@ -29,11 +34,8 @@ public class CargoHandledConsumer implements MessageListener {
       
       cargoInspectionService.inspectCargo(new TrackingId(trackingidString));
     } catch (Exception e) {
-      logger.error(e, e);
+      logger.error(e.getMessage(), e);
     }
   }
 
-  public void setCargoInspectionService(CargoInspectionService cargoInspectionService) {
-    this.cargoInspectionService = cargoInspectionService;
-  }
 }
